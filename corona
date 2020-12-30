@@ -1,0 +1,42 @@
+#!/bin/sh
+
+#Update interval, the amount of
+#time (in seconds) that needs to elapse before
+#the script fetches new data when you run it.
+#1  hrs = 3600 s
+#2  hrs = 7200 s
+#3  hrs = 10800 s
+#4  hrs = 14400 s - Default value
+#6  hrs = 21600 s
+#12 hrs = 43200 s
+update_interval="14400"
+
+country="${1:-Macedonia}"
+
+
+if [ -e ~/.cache/corona-stats ]
+	then
+		current_stamp="$(date '+%s')"
+		old_stamp="$(stat -c %Y ~/.cache/corona-stats 2>/dev/null | awk '{print $1}')"
+		diff=$((current_stamp - old_stamp))
+
+		[ $diff -ge $update_interval ] &&
+			curl -s  https://corona-stats.online > ~/.cache/corona-stats
+	else
+		curl -s https://corona-stats.online > ~/.cache/corona-stats
+fi
+
+grep -i "$country" ~/.cache/corona-stats |
+	sed "s/\s*//g ; s/║//g ; s/│/;/g" |
+	awk -F';' '{print "Rank: "$1"\n" "Infected: "$3 " ("$4")""\n" "Deaths: "$5 " ("$6")"}'
+
+echo "World"
+grep "World" ~/.cache/corona-stats |
+       	sed "s/\s*//g ; s/║//g ; s/│/;/g ; /\D/d" |
+	awk -F';' '{print "Total infected: "$3 " ("$4")""\n" "Total deaths: "$5" ("$6")"}'
+
+
+## TODO
+# 1)Add death rate (in %, deaths/total * 100)
+# 2)Add a function that writes daily updates to a table.
+#DONE 3)Add global infected, dead and death rate at the bottom of output.

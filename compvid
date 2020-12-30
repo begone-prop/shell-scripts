@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ffmpeg -i "$1" -c:v libvpx -crf 15 -b:v 1M -c:a none "${1%.*}.webm"

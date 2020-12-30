@@ -1,0 +1,6 @@
+#!/bin/sh
+
+atemp="$(($(paste -sd+ < /sys/class/thermal/thermal_zone*/temp | bc) / 3000))"
+
+#Posix
+#atemp="$(($(cat /sys/class/thermal/thermal_zone*/temp | paste -sd+ | bc) / 3000))"

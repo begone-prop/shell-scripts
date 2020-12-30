@@ -1,0 +1,25 @@
+#!/bin/sh
+
+getcolor(){
+    shuf -i 0-250 -n 1
+}
+
+edit_file(){
+    sed -i "s/^brackets.*/brackets=\"$(getcolor)\"/;
+    s/^usr.*/usr=\"$(getcolor)\"/;
+    s/^mach.*/mach=\"$(getcolor)\"/;
+    s/^indicator.*/indicator=\"$(getcolor)\"/;
+    s/^loc.*/loc=\"$(getcolor)\"/" "$1"
+}
+
+print_prompt(){
+rand_prompt="brackets=\"$(getcolor)\"
+usr=\"$(getcolor)\"
+mach=\"$(getcolor)\"
+indicator=\"$(getcolor)\"
+loc=\"$(getcolor)\""
+
+    echo "$rand_prompt"
+}
+
+[ "$1" = "-e" ] && edit_file "$2" || print_prompt

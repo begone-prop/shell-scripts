@@ -1,0 +1,8 @@
+#!/bin/sh
+
+newprogs=$(pip list --outdated --format=freeze |
+    sed '/youtube-dl.*/d; /^$/d' | cut -d = -f 1)
+
+for prog in $newprogs; do
+    pip install -U "$prog"
+done

@@ -1,0 +1,4 @@
+#!/bin/sh
+ps -axch -o cmd:15,%cpu --sort=-%cpu | head
+echo
+ps -axch -o cmd:15,%mem --sort=-%mem | head
