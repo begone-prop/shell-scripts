@@ -8,6 +8,6 @@ locpath="$HOME/misc/android/TitaniumBackup/Titanium_Backup"
 ping -c 1 karate > /dev/null 2>&1 && {
     if [ "$(eval "$pow"/status)" = "Charging" ] || [ "$(eval "$pow"/capacity)" -gt 50 ];
     then
-        rsync -urvP karate:"$rempath" "$locpath"
+        rsync -qurvP karate:"$rempath" "$locpath"
     fi
 }
