@@ -1,0 +1,17 @@
+#!/bin/sh
+
+parse() {
+    awk '/HEADER/ {gsub(",","",$6); print $6}'
+}
+
+pgrep dnscrypt-proxy > /dev/null 2>&1 || exit 1
+
+sigok="$(dig sigok.verteiltesysteme.net @127.0.0.1 | parse)"
+sigfail="$(dig sigfail.verteiltesysteme.net @127.0.0.1 | parse)"
+
+result="X"
+[ "$sigok" = "NOERROR" ] && [ "$sigfail" = "SERVFAIL" ] &&
+    result="✓"
+
+printf "sigok: %s\nsigfail: %s\n" "$sigok" "$sigfail"
+echo "DNSSEC: [$result]"
