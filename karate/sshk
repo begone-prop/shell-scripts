@@ -1,0 +1,27 @@
+#!/bin/sh
+
+pids=$(pidof sshd)
+auto="/data/ssh/no-autostart"
+service="/data/adb/modules/ssh/opensshd.init"
+
+status(){
+   stat="disabled" 
+   port=$(awk '/^Port/ {print }' /data/ssh/sshd_config)
+   run="Not running"
+   [ -e $auto ] && stat="enabled"
+   [ -n "$pids" ] && run="Runnig"
+    stat="● sshd - OpenSSH Daemon
+        Service: $stat
+        Active: $run
+        PID: $pids
+        Port: $port"
+    echo "$stat"
+}
+
+case $1 in
+    enable) [ -e $auto ] || touch $auto && echo "Created $auto";;
+    disable) [ -e $auto ] && rm $auto 2>/dev/null && echo "Removed $auto";;
+    start) [ -n "$pids" ] || "$service" start;;
+    stop) [ -n "$pids" ] && "$service" stop;;
+    status) status;;
+esac

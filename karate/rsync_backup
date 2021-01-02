@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#rsync -urvP karate:/storage/6661-3238/TitaniumBackup/Titanium\ Backup .
+chg=$(ssh karate cat /sys/class/power_supply/battery/status)
+cap=$(ssh karate cat /sys/class/power_supply/battery/capacity)
+
+
+if [ "$chg" = "Charging" ]
+then
+    echo "lmao"
+else
+    if [ "$cap" -gt 50 ]
+    then
+        echo "more than 50"
+    fi
+fi
