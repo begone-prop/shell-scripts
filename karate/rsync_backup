@@ -1,16 +1,13 @@
 #!/bin/sh
 
-#rsync -urvP karate:/storage/6661-3238/TitaniumBackup/Titanium\ Backup .
-chg=$(ssh karate cat /sys/class/power_supply/battery/status)
-cap=$(ssh karate cat /sys/class/power_supply/battery/capacity)
+pow="ssh karate cat /sys/class/power_supply/battery"
+rempath="/storage/6661-3238/TitaniumBackup/Titanium\ Backup/"
+locpath="$HOME/misc/android/TitaniumBackup/Titanium_Backup"
 
-
-if [ "$chg" = "Charging" ]
-then
-    echo "lmao"
-else
-    if [ "$cap" -gt 50 ]
+#Remote hostname must be in /etc/hosts
+ping -c 1 karate > /dev/null 2>&1 && {
+    if [ "$(eval "$pow"/status)" = "Charging" ] || [ "$(eval "$pow"/capacity)" -gt 50 ];
     then
-        echo "more than 50"
+        rsync -urvP karate:"$rempath" "$locpath"
     fi
-fi
+}
