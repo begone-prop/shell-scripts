@@ -1,0 +1,4 @@
+#!/bin/sh
+
+pkg=${1:--}
+grep -i ^url "$pkg" | sed 's/.*:\s//g'
