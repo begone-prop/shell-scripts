@@ -1,10 +1,11 @@
 #!/bin/sh
+#Remote hostname must be in /etc/hosts
+#SSH keys must be set up correctly
 
 pow="ssh karate cat /sys/class/power_supply/battery"
 rempath="/storage/6661-3238/TitaniumBackup/Titanium\ Backup/"
 locpath="$HOME/misc/android/TitaniumBackup/Titanium_Backup"
 
-#Remote hostname must be in /etc/hosts
 ping -c 1 karate > /dev/null 2>&1 && {
     if [ "$(eval "$pow"/status)" = "Charging" ] || [ "$(eval "$pow"/capacity)" -gt 50 ];
     then
