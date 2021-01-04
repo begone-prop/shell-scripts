@@ -1,6 +1,20 @@
 #!/bin/sh
 
-test ! -t 0 || [ -f "$1" ] || exit 1
+test ! -t 0 || [ "$1" ] || {
+    echo "No arguments. Exiting..."
+    exit 1
+}
 
-pkg=${1:--}
-grep -i ^url "$pkg" | sed 's/.*:\s//g'
+get_link(){
+    link=$(grep -i ^url - | sed 's/.*:\s//g')
+    echo "$link" | xclip -r -selection clipboard
+    echo "Copied $link to clipboard"
+}
+
+[ -n "$1" ] ||  {
+    get_link && exit 0
+}
+
+case "$1" in
+    -s) pacman -Si "$2" | get_link && exit 0 ;;
+esac
