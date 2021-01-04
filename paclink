@@ -1,20 +1,27 @@
 #!/bin/sh
 
-test ! -t 0 || [ "$1" ] || {
-    echo "No arguments. Exiting..."
+get_link() {
+    color=$(tput setaf 4)
+    rs=$(tput sgr0)
+    link=$(grep -i ^url - | sed 's/.*:\s//g')
+    echo "$link" | xclip -r -selection clipboard
+    echo "${rs}Copied ${color}$link${rs} to clipboard"
+    exit 0
+}
+
+err() {
+    echo "$1"
     exit 1
 }
 
-get_link(){
-    link=$(grep -i ^url - | sed 's/.*:\s//g')
-    echo "$link" | xclip -r -selection clipboard
-    echo "Copied $link to clipboard"
-}
+test ! -t 0 || [ "$1" ] || err "Nothing to do"
+test ! -t 0 && inf=$(grep . -)
 
-[ -n "$1" ] ||  {
-    get_link && exit 0
-}
+[ "$inf" ] || inf=$(pacman -Si "$2" 2>/dev/null)
+[ "$inf" = "$1" ] && err "Program doesn't exit"
 
-case "$1" in
-    -s) pacman -Si "$2" | get_link && exit 0 ;;
+case $1 in
+    -c) echo "$inf" | get_link;;
+    -p|'') echo "$inf" | grep -i ^url | sed 's/.*:\s//g' && exit;;
+     *) err "Unknown option $1";;
 esac
