@@ -1,9 +1,0 @@
-#!/bin/sh
-
-mpid=$(pidof mpv)
-[ -z "$mpid" ] || echo "An instance of mpv is already running" || exit 1
-
-[ "$1" = "-q" ] && setsid -f mpv --no-audio-display "$2" > /dev/null 2>&1 &&
-    pidof mpv && exit || echo "An error occured." && exit 4
-
-setsid -f mpv "$1" > /dev/null 2>&1 && pidof mpv && exit || echo "An error occured." && exit 3
