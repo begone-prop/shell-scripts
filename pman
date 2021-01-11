@@ -1,4 +1,5 @@
 #!/bin/sh
 
-test -z "$1" && exit 1
-man -Tpdf "$1" | zathura --fork -
+test -z "$1" && exit 1 || which "$1" >/dev/null 2>&1 || exit 1
+
+man -Tpdf "$1" | zathura --fork - >/dev/null 2>&1
