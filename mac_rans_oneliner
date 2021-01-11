@@ -1,3 +1,0 @@
-#!/bin/sh
-
-head -n 1024 /dev/urandom | strings | grep -o '[[:alnum:]]' | head -n 64 | tr -d '\n'

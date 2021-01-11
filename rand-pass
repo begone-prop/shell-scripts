@@ -1,0 +1,6 @@
+#!/bin/sh
+
+len=${1:-64}
+head -n 512 /dev/urandom | strings |
+    grep -e "\w" -e "[!@#$%^&*()-_=+<>?[]/\\]" | sed -E 's/\s+//g; ' |
+    tr -d "\n" | dd status=none bs=64 count=1
