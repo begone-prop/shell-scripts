@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Defaults
+# Day: 6500K Night: 4500K
+
+day=6500
+night=3500
+step=100
+val=$(cat ~/.cache/lum)
+
+
+case "$1" in
+    u) curr=$((val + step))
+        redshift -P -O "$curr"
+        echo "$curr" > ~/.cache/lum;;
+
+    d) curr=$((val - step))
+        redshift -P -O "$curr"
+        echo "$curr" > ~/.cache/lum;;
+
+    D)  redshift -P -O "$day"
+        echo "$day" > ~/.cache/lum;;
+
+    N)  redshift -P -O "$night"
+        echo "$night" > ~/.cache/lum;;
+esac
