@@ -8,19 +8,34 @@ night=3500
 step=100
 val=$(cat ~/.cache/lum)
 
+auto() {
+    now=$(date +%H)
+    if [ "$now" -ge 07 ] && [ "$now" -le 17 ]; then
+        redshift -P -O "$day" > /dev/null
+        kill -49 $(pidof dwmblocks) 2>/dev/null || exit 1
+    else
+        if [ "$val" -le "$night" ]; then
+            exit 0
+        else
+            redshift -P -O "$night" > /dev/null
+        fi
+    fi
+}
 
 case "$1" in
     u) curr=$((val + step))
-        redshift -P -O "$curr"
+        redshift -P -O "$curr" > /dev/null
         echo "$curr" > ~/.cache/lum;;
 
     d) curr=$((val - step))
-        redshift -P -O "$curr"
+        redshift -P -O "$curr" > /dev/null
         echo "$curr" > ~/.cache/lum;;
 
-    D)  redshift -P -O "$day"
+    D)  redshift -P -O "$day" > /dev/null
         echo "$day" > ~/.cache/lum;;
 
-    N)  redshift -P -O "$night"
+    N)  redshift -P -O "$night" > /dev/null
         echo "$night" > ~/.cache/lum;;
+
+    a) auto;;
 esac
