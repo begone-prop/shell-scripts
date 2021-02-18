@@ -18,7 +18,7 @@ on_login() {
     if [ "$now" -gt 07 ] && [ "$now" -lt 17 ]; then
         rshift $day
     else
-        [ "$val" -gt "$night" ] && rshift $night
+        [ "$val" -ge "$night" ] && rshift $night
     fi
 }
 
@@ -31,5 +31,5 @@ case "$1" in
 
     N) rshift $night;;
 
-    a) on_login;;
+    l) on_login;;
 esac
