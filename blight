@@ -13,6 +13,15 @@ rshift() {
     echo "$1" > ~/.cache/lum
 }
 
+on_login() {
+    now=$(date +%H)
+    if [ "$now" -gt 07 ] && [ "$now" -lt 17 ]; then
+        rshift $day
+    else
+        [ "$val" -gt "$night" ] && rshift $night
+    fi
+}
+
 case "$1" in
     u) rshift $((val + step));;
 
@@ -21,4 +30,6 @@ case "$1" in
     D) rshift $day;;
 
     N) rshift $night;;
+
+    a) on_login;;
 esac
