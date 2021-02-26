@@ -1,0 +1,4 @@
+#!/bin/sh
+
+name="recording_$(date '+%d-%m-%y_%H%M%S')"
+#setsid -f ffmpeg -y -f x11grab -s 1920x1080 -i :0 -c:v libx264 -qp 0 -r 30 sneed.mp4 >/dev/null 2>&1
