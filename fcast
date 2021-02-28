@@ -1,4 +1,32 @@
 #!/bin/sh
 
+dm() {
+    dmenu -i -fn "Iosevka Light:size=11" -sb "#ffa500" -sf "#000000" -p "$1"
+}
+
+[ "$1" = "-k" ] && {
+    pid=$(pstree -Aap 2>/dev/null | grep -v "grep" | grep "ffmpeg.*x11" | head -n 1 | grep -o ",[0-9]\+" | sed "s/,//")
+    [ -n "$pid" ] && kill "$pid" || exit 1
+    echo "Killed ffmpeg with pid $pid"
+} && exit
+
 name="recording_$(date '+%d-%m-%y_%H%M%S')"
-#setsid -f ffmpeg -y -f x11grab -s 1920x1080 -i :0 -c:v libx264 -qp 0 -r 30 sneed.mp4 >/dev/null 2>&1
+ext=$(printf "mp4\nwebm" | dm "Choose file type:")
+qual=$(printf "High\nNormal\nLow" | dm "Choose quality:")
+dir="$HOME/external/media/videos/screencasts"
+
+case $qual in
+    High) qual=4;;
+    Normal) qual=28;;
+    Low) qual=50;;
+esac
+
+case $ext in
+    mp4) cdc="libx264";;
+    webm) cdc="libvpx";;
+esac
+
+[ -z "$qual" ] && [ -z "$ext" ] && exit 1
+setsid -f ffmpeg -y -f x11grab -s 1920x1080 \
+    -i "$DISPLAY" -c:v "$cdc" -crf "$qual" -b:v 1M "$dir/$name.$ext" >/dev/null 2>&1 &&\
+    notify-send "Recording screen." "Saving in $ext format"
