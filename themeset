@@ -1,0 +1,24 @@
+#!/bin/sh
+
+#dmenu.font          : font or font set
+#dmenu.background    : normal background color
+#dmenu.foreground    : normal foreground color
+#dmenu.selbackground : selected background color
+#dmenu.selforeground : selected foreground color
+
+conf="$HOME/misc/suckless/dwm/config.h"
+xres="$HOME/.Xresources"
+
+get_sel() {
+    grep "$1" "$conf" | grep -o '".*"' | sed 's/"//g'
+}
+
+(
+cat <<EOF
+
+! Dmenu
+dmenu.font: $(get_sel "static const char dmenufont")
+dmenu.selbackground: $(get_sel "static char titleselbgcolor")
+dmenu.selforeground: $(get_sel "static char titleselfgcolor")
+EOF
+) >> "$xres"
