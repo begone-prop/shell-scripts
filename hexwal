@@ -1,0 +1,11 @@
+#!/bin/sh
+
+lim=$((0xffffff))
+dig=$((${#lim} - 2))
+
+for col in $(seq 0 25 $lim); do
+    color=$(printf "%${dig}x\n" "$col" | sed "s/\s/0/g; s/.*/#&/")
+    convert -size 5x5 canvas:"$color" wall.png
+    xwallpaper --tile ./wall.png
+    #sleep 1
+done
