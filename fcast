@@ -10,6 +10,9 @@ dm() {
     echo "Killed ffmpeg with pid $pid"
 } && exit
 
+res=$(xrandr 2>/dev/null | grep -o "current.*," | sed "s/current//g; s/\s//g; s/,//g")
+[ -z "$res" ] && exit 1
+
 name="recording_$(date '+%d-%m-%y_%H%M%S')"
 ext=$(printf "mp4\nwebm" | dm "Choose file type:")
 qual=$(printf "High\nNormal\nLow" | dm "Choose quality:")
@@ -27,6 +30,6 @@ case $ext in
 esac
 
 [ -z "$qual" ] && [ -z "$ext" ] && exit 1
-setsid -f ffmpeg -y -f x11grab -s 1920x1080 \
+setsid -f ffmpeg -y -f x11grab -s "$res" \
     -i "$DISPLAY" -c:v "$cdc" -crf "$qual" -b:v 1M "$dir/$name.$ext" >/dev/null 2>&1 &&\
     notify-send "Recording screen." "Saving in $ext format"
