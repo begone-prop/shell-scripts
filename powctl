@@ -1,0 +1,14 @@
+#!/bin/sh
+
+action=$(printf "Shutdown\nReboot\n" | dmenu -i -p "What do you want to do?")
+[ -z "$action" ] && exit 1
+
+conf=$(printf "Yes\nNo\n" | dmenu -i -p "Are you sure?")
+[ -z "$conf" ] && exit 1
+
+[ "$conf" = "No" ] && exit
+
+case $action in
+    Shutdown) systemctl poweroff || systemctl poweroff -i | notify-send "$0" "An error occured, try shutting down manually";;
+    Reboot) systemctl reboot;;
+esac

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#scrot -e 'mv $f ~/media/pictures/screenshots'
+mode=$(printf 'Screen\nRectangle' | dmenu -i -p 'Select type of screenshot:')
+
+case $mode in
+    Screen) scrot -e 'mv $f ~/external/media/pictures/screenshots'
+        notify-send "Captured screen." "Saved in ~/external/media/pictures/screenshots";;
+
+    Rectangle)  notify-send "$(basename $0 | tr '[:lower:]' '[:upper:]')" "Select area"
+        scrot -se 'mv $f ~/external/media/pictures/screenshots' &&
+        notify-send "Captured screen." "Saved in ~/external/media/pictures/screenshots";;
+esac
