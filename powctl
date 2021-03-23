@@ -1,9 +1,9 @@
 #!/bin/sh
 
-action=$(printf "Shutdown\nReboot\n" | dmenu -i -p "What do you want to do?")
+action=$(printf "Shutdown\nReboot\nSuspend\n" | dmenu -i -X 10 -Y 10 -W 1900 -p "What do you want to do?")
 [ -z "$action" ] && exit 1
 
-conf=$(printf "Yes\nNo\n" | dmenu -i -p "Are you sure?")
+conf=$(printf "Yes\nNo\n" | dmenu -X 10 -Y 10 -W 1900 -i -p "Are you sure?")
 [ -z "$conf" ] && exit 1
 
 [ "$conf" = "No" ] && exit
@@ -11,4 +11,5 @@ conf=$(printf "Yes\nNo\n" | dmenu -i -p "Are you sure?")
 case $action in
     Shutdown) systemctl poweroff || systemctl poweroff -i | notify-send "$0" "An error occured, try shutting down manually";;
     Reboot) systemctl reboot;;
+    Suspend) systemctl suspend || notify-send "$0" "An error occured, try suspending manually.";;
 esac

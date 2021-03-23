@@ -1,7 +1,7 @@
 #!/bin/sh
 
 dm() {
-    dmenu -i -fn "Iosevka Light:size=11" -sb "#ffa500" -sf "#000000" -p "$1"
+    dmenu -i -X 10 -Y 10 -W 1900 -p "$1"
 }
 
 [ "$1" = "-k" ] && {
@@ -14,8 +14,13 @@ res=$(xrandr 2>/dev/null | grep -o "current.*," | sed "s/current//g; s/\s//g; s/
 [ -z "$res" ] && exit 1
 
 name="recording_$(date '+%d-%m-%y_%H%M%S')"
+
 ext=$(printf "mp4\nwebm" | dm "Choose file type:")
+[ -z "$ext" ] && exit 1
+
 qual=$(printf "High\nNormal\nLow" | dm "Choose quality:")
+[ -z "$qual" ] && exit 1
+
 dir="$HOME/external/media/videos/screencasts"
 
 case $qual in
