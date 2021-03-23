@@ -1,0 +1,3 @@
+#!/bin/sh
+
+curl -s "$1" | pup 'link' | grep 'rss' | grep -o 'href=".*"' | sed 's/href=//g; s/"//g'
